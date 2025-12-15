@@ -131,12 +131,17 @@ export default function Home() {
     try {
       const { error } = await supabase
         .from('chart_custom_values')
-        .upsert({
-          email: userEmail,
-          chart_id: chartId,
-          custom_values: customValues,
-          updated_at: new Date().toISOString(),
-        })
+        .upsert(
+          {
+            email: userEmail,
+            chart_id: chartId,
+            custom_values: customValues,
+            updated_at: new Date().toISOString(),
+          },
+          {
+            onConflict: 'email,chart_id',
+          }
+        )
 
       if (error) throw error
 
